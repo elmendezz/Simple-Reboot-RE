@@ -1,0 +1,70 @@
+name: Auto Version & Build APK
+
+on:
+  push:
+    branches:
+      - main # O la rama que prefieras
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Vital para subir el commit y el release
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Increment Version & Commit
+        id: versioning
+        run: |
+          # Configuramos el bot
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Lógica simple para subir la versión en el build.gradle (suponiendo que está en la raíz)
+          # Buscamos 'versionName "1.0.X"' y le sumamos 1 al último dígito
+          VERSION_OLD=$(grep "versionName" app/build.gradle | sed 's/.*"\(.*\)".*/\1/')
+          VERSION_NEW=$(echo $VERSION_OLD | awk -F. '{$NF = $NF + 1;} 1' OFS=.)
+          
+          sed -i "s/versionName \"$VERSION_OLD\"/versionName \"$VERSION_NEW\"/" app/build.gradle
+          
+          # Guardamos variables para después
+          echo "new_version=$VERSION_NEW" >> $GITHUB_OUTPUT
+          echo "commit_msg=$(git log -1 --pretty=%s)" >> $GITHUB_OUTPUT
+          
+          # Commit y push (añadimos [skip ci] para evitar bucles)
+          git add app/build.gradle
+          git commit -m "Bump version to $VERSION_NEW [skip ci]"
+          git push
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Create Pre-release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.versioning.outputs.new_version }}
+          name: Release v${{ steps.versioning.outputs.new_version }}
+          body: |
+            **Último commit del usuario:** ${{ steps.versioning.outputs.commit_msg }}
+            Autogenerado por GitHub Actions.
+          draft: false
+          prerelease: true
+          files: app/build/outputs/apk/debug/app-debug.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
