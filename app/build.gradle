@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application' de
+apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
@@ -18,24 +18,21 @@ android {
         minSdkVersion 21
         targetSdkVersion 34
         versionCode 1803261732
-        versionName "9.0"
+        
+        // El workflow inyectará estas propiedades
+        versionName project.hasProperty('versionNameOverride') ? project.versionNameOverride : "9.0"
+        if (project.hasProperty('appIdSuffix')) {
+            applicationIdSuffix project.appIdSuffix
+        }
     }
 
     compileOptions {
-        sourceCompatibility = 17
-        targetCompatibility = 17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = 17
-    }
-
-    signingConfigs {
-        debug {
-        }
-
-        release {
-        }
+        jvmTarget = "17"
     }
 
     buildTypes {
@@ -43,9 +40,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
-
         debug {
             minifyEnabled false
             shrinkResources false
@@ -57,16 +52,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'com.github.topjohnwu.libsu:core:5.2.2'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0"
-
     implementation platform('androidx.compose:compose-bom:2024.03.00')
-    implementation 'androidx.compose.material3:material3:'
+    implementation 'androidx.compose.material3:material3'
     implementation 'androidx.activity:activity-compose:1.8.2'
-
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.7.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0"
-}
-
-// Importa la configuración de debug generada por el workflow si existe
-if (file('build-debug.gradle').exists()) {
-    apply from: 'build-debug.gradle'
 }
