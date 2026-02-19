@@ -63,12 +63,16 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Actualizamos el versionName en el build.gradle original para mantener persistencia
-          sed -i "s/versionName \"${{ steps.vars.outputs.new_version }}\"/versionName \"${{ steps.vars.outputs.new_version }}\"/" app/build.gradle
+          # Añadimos AMBOS archivos al stage
+          git add app/build.gradle app/build-debug.gradle
           
-          git add app/build.gradle
-          git commit -m "Bump version to ${{ steps.vars.outputs.new_version }} [skip ci]"
-          git push
+          # Solo hacemos commit si hay cambios reales detectados por git
+          if ! git diff --cached --exit-code; then
+            git commit -m "Bump version to ${{ steps.vars.outputs.new_version }} [skip ci]"
+            git push origin master
+          else
+            echo "No hay cambios detectados en la versión, saltando commit."
+          fi
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
