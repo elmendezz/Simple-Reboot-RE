@@ -1,1 +1,6 @@
-
+android {
+    defaultConfig {
+        applicationIdSuffix ".debug"
+        versionName "9.1-debug"
+    }
+}
