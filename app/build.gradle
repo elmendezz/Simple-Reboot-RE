@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.application' de
 apply plugin: 'kotlin-android'
 
 android {
@@ -64,4 +64,9 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.7.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0"
+}
+
+// Importa la configuración de debug generada por el workflow si existe
+if (file('build-debug.gradle').exists()) {
+    apply from: 'build-debug.gradle'
 }
