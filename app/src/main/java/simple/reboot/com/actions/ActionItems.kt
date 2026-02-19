@@ -31,26 +31,31 @@ object ActionItems {
         PowerActionItem(
             type = PowerActionType.RESTART_SYSTEMUI,
             title = R.string.restart_systemui,
+            icon = R.drawable.ic_systemui,
             command = REBOOT_SYSTEMUI_CMD
         ),
         PowerActionItem(
             type = PowerActionType.SOFT_RESTART,
             title = R.string.soft_reboot,
+            icon = R.drawable.ic_soft_reboot,
             command = REBOOT_SOFT_REBOOT_CMD
         ),
         PowerActionItem(
             type = PowerActionType.RESTART_RECOVERY,
             title = R.string.reboot_recovery,
+            icon = R.drawable.ic_recovery,
             command = REBOOT_RECOVERY_CMD
         ),
         PowerActionItem(
             type = PowerActionType.RESTART_BOOTLOADER,
             title = R.string.reboot_bootloader,
+            icon = R.drawable.ic_bootloader,
             command = REBOOT_BOOTLOADER_CMD
         ),
         PowerActionItem(
             type = PowerActionType.RESTART_SAFE_MODE,
             title = R.string.reboot_safe_mode,
+            icon = R.drawable.ic_safe_mode,
             command = REBOOT_SAFE_MODE
         )
     )

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Simple Reboot</string>
+    <string name="settings_name">SR Configuración</string>
     <string name="reboot">Restart</string>
     <string name="reboot_recovery">Restart to recovery</string>
     <string name="reboot_bootloader">Restart to bootloader</string>
@@ -10,4 +11,8 @@
     <string name="shutdown">Power off</string>
     <string name="close">Close</string>
     <string name="restart_systemui">Restart SystemUi</string>
+    <string name="settings_title">Configuración</string>
+    <string name="power_menu_integration">Integración con el Menú de Apagado</string>
+    <string name="power_menu_integration_desc">Permite reemplazar o añadir opciones al menú del sistema (requiere Root/Xposed)</string>
+    <string name="accessibility_description">Simple Reboot accessibility service for power options integration.</string>
 </resources>
